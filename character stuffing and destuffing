@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<string.h>
+#define dle 16
+#define stx 2
+#define etx 3
+int main()
+{
+    char array[100]={dle,stx},destuff[100];
+    char ch;
+    int i=2;
+    printf("Enter the data cntrl+b-stx,cntrl+c-etx,cntrl+p-dle\n");
+    do
+    {
+        scanf("%c",&ch);
+        if(ch=='\n') break;
+        else if(ch==dle)
+        printf("DLE\t");
+        else if(ch==stx)
+        printf("STX\t");
+        else if(ch==etx)
+        printf("etx");
+        array[i++]=ch;
+        if(ch==dle)
+        array[i++]=dle;
+    }while(ch!='\n');
+    array[i++]=dle;
+    array[i++]=etx;
+    printf("\n");
+    printf("The stuffed data is \n");
+    for(int k=0;k<i;k++)
+    {
+        if(array[k]==dle)
+        printf("dle\t");
+        else if(array[k]==stx)
+        printf("stx\t");
+        else if(array[k]==etx)
+        printf("etx\t");
+    }
+    printf("The destuffed data is \n");
+    int j=0;
+    for(int k=2;k<i-2;k++)
+    {
+        if(array[k]==dle)
+        {
+            printf("dle\t");
+            if(array[k+1]==dle)
+            k++;
+        }
+        else if(array[k]==stx)
+        printf("stx\t");
+        else if(array[k]==etx)
+        printf("etx");
+        destuff[j++]=array[k];
+    }
+    destuff[j++]='\0';
+    return 0;
+}
