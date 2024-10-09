@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int main()
+{
+    char data[100],decoded[100];
+    char seq[36]="qwertyuiopasdfghjklzxcvbnm0123456789";
+    int i=0;
+    printf("\nEnter the data\n");
+    gets(data);
+    int len=strlen(data);
+    int present=0;
+    for(i=0;i<len;i++)
+    {
+        for(int j=0;j<36&&!present;j++)
+    {
+        if(seq[j]==tolower(data[i]))
+        {
+            if(isupper(data[i]))
+            decoded[i]='A'+j;
+            else if(islower(data[i]))
+            decoded[i]='a'+j;
+            else 
+            decoded[i]='0'-26+j;
+            present=1;
+        }
+    }
+    if(!present)
+    decoded[i]=data[i];
+    else
+    present=0;
+    }
+    decoded[i++]='\0';
+    printf("The decoded data is %s\n",decoded);
+    return 0;
+}
