@@ -1,0 +1,26 @@
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int main()
+{
+    char data[100],encoded[100];
+    char seq[36]="qwertyuiopasdfghjklzxcvbnm0123456789";
+    int i=0;
+    printf("Enter the data\n");
+    gets(data);
+    int len=strlen(data);
+    for(i=0;i<len;i++)
+    {
+        if(isupper(data[i]))
+        encoded[i]=seq[data[i]]-'A';
+        else if(islower(data[i]))
+        encoded[i]=seq[data[i]-'a'];
+        else if(isdigit(data[i]))
+        encoded[i]=seq[data[i]-'0'+26];
+        else
+        encoded[i]=data[i];
+    }
+    encoded[i]="\0";
+    printf("Encrypted data is %s",encoded);
+    return 0;
+}
