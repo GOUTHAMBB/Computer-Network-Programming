@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<string.h>
+#define degree 16
+int mod2add(int,int);
+int getnext(int *,int);
+int result[100];
+void calc_crc(int length)
+{
+    int pos=0,i=0,newpos;
+    int ccit[]={1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1};
+    while(pos<length-degree)
+    {
+        for(i=pos;i<degree;i++)
+        result[i]=mod2add(result[i],ccit[i-pos]);
+        newpos=getnext(result,pos);
+        if(newpos>pos+1)
+        pos=newpos+1;
+        pos++;
+    }
+}
+int mod2add(int x, int y)
+{
+    return (x==y?0:1);
+}
+int getnext(int *result,int pos)
+{
+    int i=pos;
+    while(result[i]=='0')
+    i++;
+    return i;
+}
+int main()
+{
+    int array[100];
+    int i=0;char ch;
+    printf("\nEnter the data");
+    do{
+        scanf("%c",&ch);
+        if(ch=='\n')
+        break;
+        else
+        array[i++]=ch-'0';
+    }while(ch!='\n');
+    int length=i;
+    for(i=0;i<degree;i++)
+    array[i+length]=0;
+    length+=degree;
+    for(i=0;i<length;i++)
+    result[i]=array[i];
+    calc_crc(length);
+    printf("\nTransmitted data is \n");
+    for(i=0;i<length-degree;i++)
+    printf("%d",array[i]);
+    for(i=length-degree;i<length;i++)
+    printf("%d",result[i]);
+    printf("\n");
+    i=0;
+    printf("Enter the data to be checked the crc\n");
+    do{
+        scanf("%c",&ch);
+        if(ch=='\n')
+        break;
+        else
+        array[i++]=ch-'0';
+    }while(ch!='\n');
+    length=i;
+    for(i=0;i<length;i++)
+    result[i]=array[i];
+    calc_crc(length);
+    printf("The calculated crc is\n");
+    for(i=length-degree;i<length;i++)
+    printf("%d",result[i]);
+    printf("\n");
+    return 0;
+}
