@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int main()
+{
+    char cipher[20][8],data[100];
+    char wrd[]="MEGABUCK";
+    int seq[8],i=0,count=0,j=0,k=0;
+    for(i=0;i<strlen(wrd);i++)
+    {
+        count=0;
+        for(j=0;j<8;j++)
+        if(wrd[i]>wrd[j])
+        count++;
+        seq[i]=count;
+    }
+    printf("Enter the data\n");
+    gets(data);
+    count=strlen(data);
+    if(count%strlen(wrd)!=0)
+    printf("Error!");
+    for(i=0;i<strlen(wrd);i++)
+    {
+        for(j=0;j<8;j++)
+        if(seq[j]==i) break;
+        for(k=0;k<count/strlen(wrd);k++)
+        cipher[k][j]=data[i*(count/strlen(wrd)+k)];
+    }
+    for(j=0;j<8;j++)
+    {
+        if(cipher[i*(count/strlen(wrd))-1][i]=='.')
+        cipher[i*(count/strlen(wrd))][i%strlen(wrd)]==' ';
+    }
+    printf("Decryoted data is");
+    for(i=0;i<strlen(data);i++)
+    printf("%c",cipher[i/strlen(wrd)][i%strlen(wrd)]);
+    return 0;
+}
