@@ -1,0 +1,92 @@
+#include <stdio.h>
+
+typedef struct {
+    int src, dst, wgt;
+} Edge;
+
+int findParent(int parent[], int v) {
+    if (parent[v] == v)
+        return v;
+    return findParent(parent, parent[v]);
+}
+
+void unionSets(int parent[], int rank[], int v1, int v2) {
+    int root1 = findParent(parent, v1);
+    int root2 = findParent(parent, v2);
+    
+    if (rank[root1] < rank[root2]) {
+        parent[root1] = root2;
+    } else if (rank[root1] > rank[root2]) {
+        parent[root2] = root1;
+    } else {
+        parent[root2] = root1;
+        rank[root1]++;
+    }
+}
+
+void sortEdges(Edge edges[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (edges[j].wgt > edges[j + 1].wgt) {
+                Edge temp = edges[j];
+                edges[j] = edges[j + 1];
+                edges[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void kruskal(Edge edges[], int n, int vertices) {
+    int parent[vertices], rank[vertices];
+    Edge mst[vertices - 1]; 
+    int mstCount = 0;
+
+    // Initialize parent and rank
+    for (int i = 0; i < vertices; i++) {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+
+    sortEdges(edges, n);
+
+    for (int i = 0; i < n; i++) {
+        int srcParent = findParent(parent, edges[i].src);
+        int dstParent = findParent(parent, edges[i].dst);
+
+        // If src and dst are in different sets, add the edge to MST
+        if (srcParent != dstParent) {
+            mst[mstCount++] = edges[i];
+            unionSets(parent, rank, srcParent, dstParent);
+        }
+
+        // If MST has enough edges, break early
+        if (mstCount == vertices - 1)
+            break;
+    }
+
+    // Print the MST
+    printf("Kruskal's Minimum Spanning Tree:\n");
+    for (int i = 0; i < mstCount; i++) {
+        printf("Edge: %d - %d | Weight: %d\n", mst[i].src, mst[i].dst, mst[i].wgt);
+    }
+}
+
+int main() {
+    int n, vertices;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &vertices);
+
+    printf("Enter the number of edges: ");
+    scanf("%d", &n);
+
+    Edge edges[n];
+    for (int i = 0; i < n; i++) {
+        printf("Enter source, destination, and weight of edge %d: ", i + 1);
+        scanf("%d %d %d", &edges[i].src, &edges[i].dst, &edges[i].wgt);
+    }
+
+    kruskal(edges, n, vertices);
+
+    return 0;
+}
